@@ -1,13 +1,4 @@
-import { readFileSync, writeFile } from 'node:fs'
-
-let tours = JSON.parse(readFileSync('./backend/data/tours-simple.json'))
-
-// Check ID
-export const checkID = (req, res, next, val) => {
-  if (Number(req.params.id) > tours.length)
-    return res.status(404).json({ status: 'fail', message: 'Invalid ID' })
-  next()
-}
+import Tour from '../models/Tour.js'
 
 // Check Body
 export const checkBody = (req, res, next) => {
@@ -25,31 +16,38 @@ export const getAllTours = (req, res) => {
     status: 'success',
     results: tours.length,
     data: { tours },
-    requestedAt: req.requestTime
+    requestedAt: req.requestTime,
   })
 }
 
 // Get Tour By Id
 export const getTourById = (req, res) => {
   const id = Number(req.params.id)
-  const tour = tours.find(tour => tour.id === id)
+  const tour = tours.find((tour) => tour.id === id)
   res.status(200).json({
     status: 'success',
-    data: { tour }
+    data: { tour },
   })
 }
 
 // Create New Tour
-export const createTour = (req, res) => {
-  const id = tours[tours.length - 1].id + 1
-  const tour = { id, ...req.body }
-  tours = [...tours, tour]
-  writeFile('./backend/data/tours-simple.json', JSON.stringify(tours), err => {
+export const createTour = async (req, res) => {
+  const newTour = {
+    name: 'The Park Camper',
+    price: 997,
+  }
+  try {
+    const tour = await Tour.create(newTour)
     res.status(201).json({
       status: 'success',
-      data: { tour }
+      data: { tour },
     })
-  })
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: 'Invalid data sent',
+    })
+  }
 }
 
 // Update Tour By Id
