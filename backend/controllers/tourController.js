@@ -2,6 +2,22 @@ import { readFileSync, writeFile } from 'node:fs'
 
 let tours = JSON.parse(readFileSync('./backend/data/tours-simple.json'))
 
+// Check ID
+export const checkID = (req, res, next, val) => {
+  if (Number(req.params.id) > tours.length)
+    return res.status(404).json({ status: 'fail', message: 'Invalid ID' })
+  next()
+}
+
+// Check Body
+export const checkBody = (req, res, next) => {
+  if (!req.body.name || !req.body.price)
+    return res
+      .status(400)
+      .json({ status: 'fail', message: 'Missing name or price' })
+  next()
+}
+
 // Get All Tours
 export const getAllTours = (req, res) => {
   console.log(req.requestTime)
@@ -17,8 +33,6 @@ export const getAllTours = (req, res) => {
 export const getTourById = (req, res) => {
   const id = Number(req.params.id)
   const tour = tours.find(tour => tour.id === id)
-  if (!tour)
-    return res.status(400).json({ status: 'fail', message: 'Invalid ID' })
   res.status(200).json({
     status: 'success',
     data: { tour }
@@ -40,8 +54,6 @@ export const createTour = (req, res) => {
 
 // Update Tour By Id
 export const updateTour = (req, res) => {
-  if (Number(req.params.id) > tours.length)
-    return res.status(400).json({ status: 'fail', message: 'Invalid ID' })
   res
     .status(200)
     .json({ status: 'success', data: { tour: '<Updated Tour Here>' } })
@@ -49,7 +61,5 @@ export const updateTour = (req, res) => {
 
 // Delete Tour By Id
 export const deleteTour = (req, res) => {
-  if (Number(req.params.id) > tours.length)
-    return res.status(400).json({ status: 'fail', message: 'Invalid ID' })
   res.status(204).json({ status: 'success', data: null })
 }
