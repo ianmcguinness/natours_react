@@ -3,15 +3,16 @@
   "type": "module",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "server": "nodemon backend/app.js"
+    "server": "nodemon backend/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
