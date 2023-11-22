@@ -1,17 +1,9 @@
 import mongoose from 'mongoose'
 import app from './app.js'
 import dotenv from 'dotenv'
+import connectDB from './data/db.js'
 
 dotenv.config()
-
-const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(process.env.MONGO_URI)
-    console.log(`Mongo DB Connected - ${conn.connection.host}`)
-  } catch (err) {
-    console.error(err)
-  }
-}
 
 connectDB()
 
